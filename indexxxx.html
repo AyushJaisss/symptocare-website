@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SymptoCare | Your Health Companion at Home</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0ea5e9',    // Sky blue 500
+                        secondary: '#3b82f6',  // Blue 500
+                        dark: '#0f172a',       // Slate 900
+                        light: '#f8fafc',      // Slate 50
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom CSS & Glassmorphism */
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #0ea5e9, #3b82f6);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Chatbot Typing Indicator */
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Parallax Background */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-light text-slate-800 antialiased selection:bg-primary selection:text-white">
+
+    <!-- Loading Animation -->
+    <div id="loader">
+        <div class="text-center">
+            <div class="spinner mx-auto mb-4"></div>
+            <h2 class="text-2xl font-bold text-gradient">SymptoCare</h2>
+            <p class="text-sm text-slate-500">Initializing AI Assistant...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-slate-900">Sympto<span class="text-primary">Care</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#about" class="text-slate-600 hover:text-primary font-medium transition-colors">About</a>
+                    <a href="#features" class="text-slate-600 hover:text-primary font-medium transition-colors">Features</a>
+                    <a href="#how-it-works" class="text-slate-600 hover:text-primary font-medium transition-colors">How it Works</a>
+                    <a href="#doctors" class="text-slate-600 hover:text-primary font-medium transition-colors">Doctors</a>
+                    <a href="#faq" class="text-slate-600 hover:text-primary font-medium transition-colors">FAQ</a>
+                    <a href="#contact" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all transform hover:-translate-y-0.5">Get Started</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-primary focus:outline-none text-2xl">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-slate-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">About</a>
+                <a href="#features" class="block px-3 py-2 text-base font-medium text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Features</a>
+                <a href="#doctors" class="block px-3 py-2 text-base font-medium text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">Doctors</a>
+                <a href="#faq" class="block px-3 py-2 text-base font-medium text-slate-600 hover:text-primary hover:bg-slate-50 rounded-md">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+   <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center" 
+style="background-image: url('template symptocare.png');">
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/50"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<!-- style="background-image: url('template symptocare.png');"> -->
+        <!-- Background decorative blobs -->
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-primary rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob animation-delay-4000"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="text-center lg:text-left z-10 animate-[fadeIn_1s_ease-out]">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-primary font-medium text-sm mb-6">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                        </span>
+                        AI Healthcare Startup of 2026
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                        Your Health Companion <br/> <span class="text-gradient">at Home</span>
+                    </h1>
+                    <p class="text-lg text-slate-200 mb-8 max-w-2xl mx-auto lg:mx-0">
+                        AI-powered symptom analysis, instant home remedies, and seamless doctor consultations. Manage your health securely from anywhere.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button onclick="document.getElementById('chat-btn').click()" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl hover:shadow-primary/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-stethoscope"></i> Check Symptoms
+                        </button>
+                        <a href="#doctors" class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-semibold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-calendar-check"></i> Consult Doctor
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image / Visuals -->
+                <div class="relative z-10 animate-[fadeInUp_1.2s_ease-out]">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent z-10"></div>
+                        <!-- <img src="template symptocare.png"> -->
+                        <!-- Floating Glass Card -->
+                        <div class="absolute bottom-6 left-6 right-6 glass text-white p-4 rounded-2xl z-20 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center border border-green-400/50">
+                                <i class="fa-solid fa-check text-green-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">AI Diagnosis Complete</h4>
+                                <p class="text-sm text-slate-200">Accuracy rate: 98.5%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges Section -->
+    <section class="border-y border-slate-200 bg-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
+                <div class="reveal flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-blue-50 text-primary rounded-xl flex items-center justify-center text-2xl mb-2">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800">AI Powered</h3>
+                    <p class="text-xs text-slate-500">Advanced ML algorithms</p>
+                </div>
+                <div class="reveal flex flex-col items-center gap-2" style="transition-delay: 100ms;">
+                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800">Secure Data</h3>
+                    <p class="text-xs text-slate-500">End-to-end encrypted</p>
+                </div>
+                <div class="reveal flex flex-col items-center gap-2" style="transition-delay: 200ms;">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-2">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800">Doctor Verified</h3>
+                    <p class="text-xs text-slate-500">Certified professionals</p>
+                </div>
+                <div class="reveal flex flex-col items-center gap-2" style="transition-delay: 300ms;">
+                    <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-2">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-800">24/7 Available</h3>
+                    <p class="text-xs text-slate-500">Always here for you</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal relative">
+                    <img src="dashboard.png" alt="Healthcare Dashboard" class="rounded-3xl shadow-xl">
+                    <!-- Floating stats card -->
+                    <div class="absolute -bottom-8 -right-8 glass p-6 rounded-2xl shadow-xl hidden md:block">
+                        <div class="flex items-center gap-4">
+                            <div class="text-4xl text-primary"><i class="fa-solid fa-chart-pie"></i></div>
+                            <div>
+                                <div class="text-2xl font-bold text-dark">60% Flu</div>
+                                <div class="text-sm text-slate-500">Probability Engine</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal">
+                    <h4 class="text-primary font-bold tracking-wider uppercase mb-2">About SymptoCare</h4>
+                    <h2 class="text-4xl font-bold text-dark mb-6">Your Personal AI Health Assistant</h2>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        SymptoCare is bridging the gap between cutting-edge AI and everyday healthcare. We provide a comprehensive platform that understands your symptoms, offers actionable advice, and connects you with the right professionals.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <div>
+                                <strong class="text-slate-800 block">Disease Probability Prediction</strong>
+                                <span class="text-sm text-slate-500">Our AI analyzes your symptoms and provides a probability breakdown (e.g., 60% flu, 40% viral infection).</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <div>
+                                <strong class="text-slate-800 block">Home Remedies & Advice</strong>
+                                <span class="text-sm text-slate-500">Get instant, safe home remedy suggestions for minor ailments.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-green-500 mt-1"></i>
+                            <div>
+                                <strong class="text-slate-800 block">Unified Ecosystem</strong>
+                                <span class="text-sm text-slate-500">Store records, connect to doctors, and find nearby labs all in one place.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h4 class="text-primary font-bold tracking-wider uppercase mb-2">Capabilities</h4>
+                <h2 class="text-4xl font-bold text-dark mb-4">Everything You Need for Your Health</h2>
+                <p class="text-slate-600">A complete suite of tools designed to make healthcare accessible, understandable, and fast.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-primary text-2xl shadow-sm mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">AI Symptom Checker</h3>
+                    <p class="text-sm text-slate-500">Chat with our AI to get instant probabilistic insights into your symptoms.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-green-500 text-2xl shadow-sm mb-6 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Home Remedies</h3>
+                    <p class="text-sm text-slate-500">Verified, natural, and safe home treatments for minor health issues.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-purple-500 text-2xl shadow-sm mb-6 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Health Records Vault</h3>
+                    <p class="text-sm text-slate-500">Securely upload, store, and share your medical history and prescriptions.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-orange-500 text-2xl shadow-sm mb-6 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Doctor Appointments</h3>
+                    <p class="text-sm text-slate-500">Book in-person or online consultations with top verified specialists.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-blue-500 text-2xl shadow-sm mb-6 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Online Consultation</h3>
+                    <p class="text-sm text-slate-500">High-quality secure video calls with doctors directly from your device.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-red-500 text-2xl shadow-sm mb-6 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Smart Reminders</h3>
+                    <p class="text-sm text-slate-500">Never miss a pill or an appointment with push notifications and SMS.</p>
+                </div>
+                <!-- Feature 7 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-teal-500 text-2xl shadow-sm mb-6 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Nearby Lab Finder</h3>
+                    <p class="text-sm text-slate-500">Locate diagnostic centers and book tests directly via GPS location.</p>
+                </div>
+                <!-- Feature 8 -->
+                <div class="reveal bg-slate-50 p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-2 group" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center text-yellow-500 text-2xl shadow-sm mb-6 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-2">Reviews & Ratings</h3>
+                    <p class="text-sm text-slate-500">Read honest reviews for medicines, companies, and healthcare providers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works (Timeline UI) -->
+    <section id="how-it-works" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Abstract Bg -->
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary via-slate-900 to-slate-900"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold mb-4">How SymptoCare Works</h2>
+                <p class="text-slate-400">Your journey to better health in 4 simple steps.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8 relative">
+                <!-- Line connecting steps (Desktop) -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-800 -translate-y-1/2 z-0"></div>
+
+                <!-- Step 1 -->
+                <div class="reveal relative z-10 text-center">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center text-2xl font-bold text-primary mb-4 shadow-[0_0_20px_rgba(14,165,233,0.3)]">
+                        1
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Enter Symptoms</h3>
+                    <p class="text-sm text-slate-400">Chat with our AI and describe how you are feeling.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="reveal relative z-10 text-center" style="transition-delay: 150ms;">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center text-2xl font-bold text-primary mb-4 shadow-[0_0_20px_rgba(14,165,233,0.3)]">
+                        2
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Get Probability Results</h3>
+                    <p class="text-sm text-slate-400">AI analyzes data and returns possible condition probabilities.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="reveal relative z-10 text-center" style="transition-delay: 300ms;">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center text-2xl font-bold text-primary mb-4 shadow-[0_0_20px_rgba(14,165,233,0.3)]">
+                        3
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Choose Action</h3>
+                    <p class="text-sm text-slate-400">Opt for a home remedy or decide to consult a verified doctor.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="reveal relative z-10 text-center" style="transition-delay: 450ms;">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center text-2xl font-bold text-primary mb-4 shadow-[0_0_20px_rgba(14,165,233,0.3)]">
+                        4
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Book or Save</h3>
+                    <p class="text-sm text-slate-400">Book your appointment or save your interaction to health records.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors & Consultation Section -->
+    <section id="doctors" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div class="max-w-2xl">
+                    <h4 class="text-primary font-bold tracking-wider uppercase mb-2">Top Specialists</h4>
+                    <h2 class="text-4xl font-bold text-dark mb-4">Consult Verified Doctors</h2>
+                    <p class="text-slate-600">Connect with the best medical professionals via video call or book an in-clinic visit.</p>
+                </div>
+                <a href="#" class="text-primary font-semibold hover:underline mt-4 md:mt-0">View All Doctors <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            </div>
+
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Doctor Card 1 -->
+                <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100">
+                    <img src="sarah.jpeg" alt="Dr. Sarah" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-lg text-dark">Dr. Sarah Pyne</h3>
+                                <p class="text-primary text-sm font-medium">Cardiologist</p>
+                            </div>
+                            <div class="flex items-center text-sm bg-yellow-50 text-yellow-600 px-2 py-1 rounded">
+                                <i class="fa-solid fa-star mr-1 text-xs"></i> 4.9
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-solid fa-location-dot mr-1"></i> RIIMS , Ranchi</p>
+                        <button class="w-full py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors">Book Appointment</button>
+                    </div>
+                </div>
+                <!-- Doctor Card 2 -->
+                <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100" style="transition-delay: 100ms;">
+                    <img src="smishra,.jpeg" alt="Dr. Subhakar" class="w-full h-48 object-cover object-top">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-lg text-dark">Dr. Subhakar Mishra</h3>
+                                <p class="text-primary text-sm font-medium">General Physician</p>
+                            </div>
+                            <div class="flex items-center text-sm bg-yellow-50 text-yellow-600 px-2 py-1 rounded">
+                                <i class="fa-solid fa-star mr-1 text-xs"></i> 4.8
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-solid fa-location-dot mr-1"></i> SymptoCare Clinic</p>
+                        <button class="w-full py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors">Book Appointment</button>
+                    </div>
+                </div>
+                <!-- Doctor Card 3 -->
+                <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100" style="transition-delay: 200ms;">
+                    <img src="pushpit.jpeg" alt="Dr. Pushpit" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-lg text-dark">Dr. Pushpit kislay</h3>
+                                <p class="text-primary text-sm font-medium">Dermatologist</p>
+                            </div>
+                            <div class="flex items-center text-sm bg-yellow-50 text-yellow-600 px-2 py-1 rounded">
+                                <i class="fa-solid fa-star mr-1 text-xs"></i> 5.0
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-solid fa-location-dot mr-1"></i> SkinCare Center</p>
+                        <button class="w-full py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors">Book Appointment</button>
+                    </div>
+                </div>
+                <!-- Doctor Card 4 -->
+                <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100 hidden lg:block" style="transition-delay: 300ms;">
+                    <img src="child.jpeg" alt="Dr. James" class="w-full h-48 object-cover object-top">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-bold text-lg text-dark">Dr. James Wilson</h3>
+                                <p class="text-primary text-sm font-medium">Pediatrician</p>
+                            </div>
+                            <div class="flex items-center text-sm bg-yellow-50 text-yellow-600 px-2 py-1 rounded">
+                                <i class="fa-solid fa-star mr-1 text-xs"></i> 4.7
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4"><i class="fa-solid fa-location-dot mr-1"></i> Kids Health Hub</p>
+                        <button class="w-full py-2 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-colors">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lab Finder & Dashboard Preview Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                
+                <!-- Lab Finder -->
+                <div class="reveal">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-blue-50 text-primary rounded-lg flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-dark">Nearby Lab Finder</h2>
+                    </div>
+                    <p class="text-slate-600 mb-8">Quickly locate trusted diagnostic centers around you. Compare ratings, check test availability, and book sample collections from home.</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Lab Card 1 -->
+                        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:shadow-md transition-shadow bg-slate-50">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800">Apex Diagnostics</h4>
+                                    <p class="text-xs text-slate-500">1.2 miles away • <i class="fa-solid fa-star text-yellow-400"></i> 4.8</p>
+                                </div>
+                            </div>
+                            <button class="text-primary text-sm font-medium hover:underline">Book Test</button>
+                        </div>
+                        <!-- Lab Card 2 -->
+                        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:shadow-md transition-shadow bg-slate-50">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800">CityPath Labs</h4>
+                                    <p class="text-xs text-slate-500">2.5 miles away • <i class="fa-solid fa-star text-yellow-400"></i> 4.5</p>
+                                </div>
+                            </div>
+                            <button class="text-primary text-sm font-medium hover:underline">Book Test</button>
+                        </div>
+                        <!-- Lab Card 3 -->
+                        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:shadow-md transition-shadow bg-slate-50">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800">NovaCare Imaging</h4>
+                                    <p class="text-xs text-slate-500">3.0 miles away • <i class="fa-solid fa-star text-yellow-400"></i> 4.9</p>
+                                </div>
+                            </div>
+                            <button class="text-primary text-sm font-medium hover:underline">Book Test</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Records UI Preview -->
+                <div class="reveal bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full mix-blend-overlay filter blur-3xl opacity-30"></div>
+                    
+                    <div class="flex items-center justify-between mb-8 relative z-10">
+                        <h3 class="text-2xl font-bold">Health Vault</h3>
+                        <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors border border-white/10 backdrop-blur-sm">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Upload
+                        </button>
+                    </div>
+
+                    <div class="space-y-4 relative z-10">
+                        <!-- Record Item -->
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">Blood Test Report</h4>
+                                    <p class="text-xs text-slate-400">Added Oct 12, 2026</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-vertical text-slate-400"></i>
+                        </div>
+                        <!-- Record Item -->
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-file-prescription"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">Dr. Jenkins Prescription</h4>
+                                    <p class="text-xs text-slate-400">Added Sep 28, 2026</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-vertical text-slate-400"></i>
+                        </div>
+                        <!-- Record Item -->
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center justify-between backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-image"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-sm">X-Ray Scan</h4>
+                                    <p class="text-xs text-slate-400">Added Aug 15, 2026</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-vertical text-slate-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold text-dark mb-4">What Our Users Say</h2>
+                <p class="text-slate-600">Real stories from people who transformed their health journey with SymptoCare.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="reveal bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative">
+                    <i class="fa-solid fa-quote-left text-4xl text-primary/20 absolute top-6 right-6"></i>
+                    <div class="flex text-yellow-400 text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 mb-6 italic">"Very helpful app! The AI correctly identified my symptoms and suggested a home remedy that worked perfectly. Saved me a trip to the clinic."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=32" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-dark">Sarah M.</h4>
+                            <p class="text-xs text-slate-500">Verified User</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="reveal bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative" style="transition-delay: 150ms;">
+                    <i class="fa-solid fa-quote-left text-4xl text-primary/20 absolute top-6 right-6"></i>
+                    <div class="flex text-yellow-400 text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <p class="text-slate-600 mb-6 italic">"Saved my time immensely. Booking a doctor for my kid was seamless, and keeping all prescriptions in the vault is a game changer."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=11" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-dark">David K.</h4>
+                            <p class="text-xs text-slate-500">Verified User</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="reveal bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative" style="transition-delay: 300ms;">
+                    <i class="fa-solid fa-quote-left text-4xl text-primary/20 absolute top-6 right-6"></i>
+                    <div class="flex text-yellow-400 text-sm mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 mb-6 italic">"Accurate predictions! I was worried about my symptoms, but the AI probability engine calmed me down and told me it was likely just seasonal allergies."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=47" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-dark">Priya R.</h4>
+                            <p class="text-xs text-slate-500">Verified User</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-4xl font-bold text-dark mb-4">Frequently Asked Questions</h2>
+                <p class="text-slate-600">Got questions? We've got answers.</p>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- FAQ Item -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                    <button class="faq-btn w-full px-6 py-4 text-left font-bold text-dark flex justify-between items-center focus:outline-none">
+                        Is SymptoCare accurate?
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed">
+                        SymptoCare uses advanced machine learning models trained on millions of medical records. While it provides a high-accuracy probability analysis (over 95% for common ailments), it is designed as an assistant, not a replacement for a professional medical diagnosis.
+                    </div>
+                </div>
+                <!-- FAQ Item -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                    <button class="faq-btn w-full px-6 py-4 text-left font-bold text-dark flex justify-between items-center focus:outline-none">
+                        Is my data safe?
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed">
+                        Yes. We employ end-to-end encryption and comply with HIPAA and GDPR standards. Your health records and chat histories are strictly confidential and are never shared with third parties without your explicit consent.
+                    </div>
+                </div>
+                <!-- FAQ Item -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                    <button class="faq-btn w-full px-6 py-4 text-left font-bold text-dark flex justify-between items-center focus:outline-none">
+                        Can I consult real doctors?
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed">
+                        Absolutely. SymptoCare seamlessly connects you with verified, board-certified doctors for online video consultations or in-person clinic visits.
+                    </div>
+                </div>
+                <!-- FAQ Item -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                    <button class="faq-btn w-full px-6 py-4 text-left font-bold text-dark flex justify-between items-center focus:outline-none">
+                        Is it free to use?
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed">
+                        The AI symptom checker and basic health vault are completely free. Doctor consultations and lab bookings are charged based on the provider's standard fees.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-24 relative parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1551076805-e18690c5e531?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-blue-900/90 z-0"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10 text-white reveal">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Start Your Health Journey Today</h2>
+            <p class="text-lg md:text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Join thousands of users who have revolutionized the way they manage their health. Try the AI assistant now.</p>
+            <button onclick="document.getElementById('chat-btn').click()" class="bg-white text-primary px-10 py-4 rounded-full font-bold text-lg hover:bg-slate-50 hover:shadow-2xl transition-all transform hover:-translate-y-1">
+                Get Started for Free
+            </button>
+        </div>
+    </section>
+
+    <!-- Contact & Footer Section -->
+    <footer id="contact" class="bg-slate-900 pt-20 pb-10 text-slate-300 border-t-4 border-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Branding -->
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-xl">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <span class="font-bold text-2xl text-white">Sympto<span class="text-primary">Care</span></span>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-6">Empowering you with AI-driven health insights, seamless doctor connections, and complete medical management.</p>
+                    <div class="flex gap-4">
+                        <a href="https://www.instagram.com/symptocare_forall?igsh=MWppbGRiaTdkdHUzYw==" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/917091398225" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-green-500 hover:text-white transition-colors">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-white font-bold mb-6">Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#about" class="hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+                        <li><a href="#doctors" class="hover:text-primary transition-colors">Find a Doctor</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Lab Tests</a></li>
+                        <li><a href="#faq" class="hover:text-primary transition-colors">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-white font-bold mb-6">Legal</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Medical Disclaimer</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Form / Info -->
+                <div>
+                    <h4 class="text-white font-bold mb-6">Contact Us</h4>
+                    <form onsubmit="event.preventDefault(); alert('Message sent successfully!');" class="space-y-3 mb-6">
+                        <input type="email" placeholder="Your Email Address" required class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-primary text-sm text-white">
+                        <textarea placeholder="Your Message" rows="2" class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-primary text-sm text-white resize-none"></textarea>
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white py-2 rounded-lg font-medium text-sm transition-colors">Send Message</button>
+                    </form>
+                    <a href="https://wa.me/917091398225" target="_blank" class="inline-flex items-center gap-2 text-green-400 hover:text-green-300 text-sm font-medium transition-colors">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>&copy; 2026 SymptoCare. All rights reserved.</p>
+                <p class="mt-2 md:mt-0">Made with <i class="fa-solid fa-heart text-red-500 mx-1"></i> for Healthcare</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <button id="chat-btn" class="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-primary to-secondary text-white rounded-full shadow-[0_0_20px_rgba(14,165,233,0.5)] flex items-center justify-center text-2xl z-50 hover:scale-110 transition-transform animate-pulse-slow">
+        <i class="fa-solid fa-comment-medical"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chat-window" class="fixed bottom-24 right-6 w-[350px] sm:w-[400px] h-[550px] max-h-[80vh] glass-dark rounded-2xl shadow-2xl z-50 flex flex-col hidden transform origin-bottom-right transition-all duration-300">
+        <!-- Chat Header -->
+        <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center bg-slate-900/50 rounded-t-2xl">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-sm">SymptoCare AI</h3>
+                    <p class="text-xs text-green-400">Online</p>
+                </div>
+            </div>
+            <button id="close-chat" class="text-slate-400 hover:text-white transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Chat Body -->
+        <div id="chat-body" class="flex-1 overflow-y-auto p-5 space-y-4 text-sm bg-slate-900/80">
+            <!-- Initial Bot Message -->
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-slate-800 text-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-md border border-slate-700">
+                    Hello! I'm your SymptoCare AI Assistant. Please describe your symptoms (e.g., "I have a headache and mild fever"), and I'll analyze them for you.
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Indicator (Hidden by default) -->
+        <div id="typing-indicator" class="hidden px-5 pb-2 bg-slate-900/80">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-2xl rounded-tl-none typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="p-4 bg-slate-900/90 rounded-b-2xl border-t border-white/10">
+            <div class="flex gap-2 relative">
+                <input type="text" id="chat-input" placeholder="Type your symptoms here..." class="flex-1 bg-slate-800 text-white rounded-full pl-4 pr-12 py-3 border border-slate-700 focus:outline-none focus:border-primary text-sm shadow-inner placeholder-slate-400">
+                <button id="send-btn" class="absolute right-1 top-1 bottom-1 aspect-square bg-primary hover:bg-secondary text-white rounded-full flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Loader fade out
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1000);
+
+            // Navbar Glass Effect on Scroll
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('shadow-md');
+                    navbar.style.background = 'rgba(255, 255, 255, 0.85)';
+                } else {
+                    navbar.classList.remove('shadow-md');
+                    navbar.style.background = 'rgba(255, 255, 255, 0.7)';
+                }
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            // Close mobile menu on link click
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+
+            // Scroll Animations (Intersection Observer)
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // FAQ Accordion
+            const faqBtns = document.querySelectorAll('.faq-btn');
+            faqBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('i');
+                    
+                    // Close all others
+                    faqBtns.forEach(otherBtn => {
+                        if (otherBtn !== btn) {
+                            otherBtn.nextElementSibling.classList.add('hidden');
+                            otherBtn.querySelector('i').style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    // Toggle current
+                    content.classList.toggle('hidden');
+                    if (content.classList.contains('hidden')) {
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // Chatbot Logic
+            const chatBtn = document.getElementById('chat-btn');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatBody = document.getElementById('chat-body');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const typingIndicator = document.getElementById('typing-indicator');
+
+            // Toggle window
+            chatBtn.addEventListener('click', () => {
+                chatWindow.classList.toggle('hidden');
+                if(!chatWindow.classList.contains('hidden')){
+                    chatInput.focus();
+                    chatBtn.classList.remove('animate-pulse-slow');
+                } else {
+                    chatBtn.classList.add('animate-pulse-slow');
+                }
+            });
+
+            closeChat.addEventListener('click', () => {
+                chatWindow.classList.add('hidden');
+                chatBtn.classList.add('animate-pulse-slow');
+            });
+
+            // Send Message
+            const sendMessage = () => {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                // Add User Message
+                addMessage(text, 'user');
+                chatInput.value = '';
+
+                // Show typing
+                typingIndicator.classList.remove('hidden');
+                scrollToBottom();
+
+                // Simulate AI response delay
+                setTimeout(() => {
+                    typingIndicator.classList.add('hidden');
+                    generateBotResponse(text);
+                }, 1500 + Math.random() * 1000); // 1.5s - 2.5s delay
+            };
+
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            function addMessage(text, sender) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `flex items-start gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''}`;
+                
+                const iconHtml = sender === 'user' 
+                    ? `<div class="w-8 h-8 bg-slate-700 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-user"></i></div>`
+                    : `<div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-robot"></i></div>`;
+                
+                const bubbleClass = sender === 'user'
+                    ? `bg-primary text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-md`
+                    : `bg-slate-800 text-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-md border border-slate-700`;
+
+                msgDiv.innerHTML = `
+                    ${iconHtml}
+                    <div class="${bubbleClass}">
+                        ${text}
+                    </div>
+                `;
+                
+                chatBody.appendChild(msgDiv);
+                scrollToBottom();
+            }
+
+            function generateBotResponse(userInput) {
+                const lowerInput = userInput.toLowerCase();
+                let response = "";
+
+                // Basic logic matching
+                if (lowerInput.includes('headache') && lowerInput.includes('fever')) {
+                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Viral Infection (60%)<br>- Migraine/Stress (30%)<br>- Flu (10%)<br><br>💡 <b>Home Remedy:</b> Rest in a dark, quiet room, stay hydrated, and try a cold compress on your forehead.<br><br>👨‍⚕️ <b>Action:</b> If fever exceeds 102°F or lasts more than 3 days, <a href='#doctors' class='text-primary underline'>consult a doctor</a> immediately.";
+                } 
+                else if (lowerInput.includes('cough') || lowerInput.includes('throat')) {
+                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Common Cold (70%)<br>- Throat Infection (25%)<br>- Allergies (5%)<br><br>💡 <b>Home Remedy:</b> Gargle with warm salt water, drink honey-lemon tea, and use a humidifier.<br><br>👨‍⚕️ <b>Action:</b> If you experience shortness of breath, please <a href='#doctors' class='text-primary underline'>book a consultation</a>.";
+                }
+                else if (lowerInput.includes('stomach') || lowerInput.includes('pain')) {
+                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Indigestion / Gastritis (65%)<br>- Food Poisoning (25%)<br>- Others (10%)<br><br>💡 <b>Home Remedy:</b> Drink plenty of clear fluids, eat bland foods like toast or crackers, and try ginger tea.<br><br>👨‍⚕️ <b>Action:</b> Severe, sharp pain requires immediate attention. <a href='#doctors' class='text-primary underline'>View our specialists</a>.";
+                }
+                else if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
+                    response = "Hello! I am ready to help. Please tell me what symptoms you are experiencing today.";
+                }
+                else {
+                    response = "I have noted your symptoms. <br><br>🩺 <b>Initial Analysis:</b> Needs more specific details for an accurate probability.<br><br>💡 <b>General Advice:</b> Keep monitoring your health. Make sure you are well-rested and hydrated.<br><br>👨‍⚕️ <b>Recommendation:</b> To be safe, it's best to discuss these specific symptoms with a professional. <button class='bg-primary/20 text-primary px-2 py-1 rounded mt-2 text-xs font-bold border border-primary/30'>Book Consultation</button>";
+                }
+
+                addMessage(response, 'bot');
+            }
+
+            function scrollToBottom() {
+                // Ensure we scroll past the typing indicator if it's visible
+                const container = chatBody.parentElement; // the whole window
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
