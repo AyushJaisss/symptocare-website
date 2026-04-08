@@ -13,6 +13,10 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -124,6 +128,14 @@
             background-repeat: no-repeat;
             background-size: cover;
         }
+
+        /* Chart Container sizing */
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body class="bg-light text-slate-800 antialiased selection:bg-primary selection:text-white">
@@ -179,14 +191,12 @@
     </nav>
 
     <!-- Hero Section -->
-   <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center" 
-style="background-image: url('template symptocare.png');">
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-cover bg-center" style="background-image: url('template symptocare.png');">
 
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black/50"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-<!-- style="background-image: url('template symptocare.png');"> -->
         <!-- Background decorative blobs -->
         <div class="absolute top-0 -left-4 w-72 h-72 bg-primary rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob"></div>
         <div class="absolute top-0 -right-4 w-72 h-72 bg-secondary rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -223,7 +233,8 @@ style="background-image: url('template symptocare.png');">
                 <div class="relative z-10 animate-[fadeInUp_1.2s_ease-out]">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl">
                         <div class="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent z-10"></div>
-                        <!-- <img src="template symptocare.png"> -->
+                        <!-- <img src="Screenshot 2026-04-07 130144.jpg" alt="Doctor holding smartphone" class="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"> -->
+                        
                         <!-- Floating Glass Card -->
                         <div class="absolute bottom-6 left-6 right-6 glass text-white p-4 rounded-2xl z-20 flex items-center gap-4">
                             <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center border border-green-400/50">
@@ -471,7 +482,7 @@ style="background-image: url('template symptocare.png');">
             <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Doctor Card 1 -->
                 <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100">
-                    <img src="sarah.jpeg" alt="Dr. Sarah" class="w-full h-48 object-cover">
+                    <img src="sarah.jpeg" alt="Dr. Sarah" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
                     <div class="p-5">
                         <div class="flex justify-between items-start mb-2">
                             <div>
@@ -488,7 +499,7 @@ style="background-image: url('template symptocare.png');">
                 </div>
                 <!-- Doctor Card 2 -->
                 <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100" style="transition-delay: 100ms;">
-                    <img src="smishra,.jpeg" alt="Dr. Subhakar" class="w-full h-48 object-cover object-top">
+                    <img src="smishra,.jpeg" alt="Dr. Subhakar" class="w-full h-48 object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
                     <div class="p-5">
                         <div class="flex justify-between items-start mb-2">
                             <div>
@@ -505,7 +516,7 @@ style="background-image: url('template symptocare.png');">
                 </div>
                 <!-- Doctor Card 3 -->
                 <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100" style="transition-delay: 200ms;">
-                    <img src="pushpit.jpeg" alt="Dr. Pushpit" class="w-full h-48 object-cover">
+                    <img src="pushpit.jpeg" alt="Dr. Pushpit" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1594824436951-7f12bc856ebf?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
                     <div class="p-5">
                         <div class="flex justify-between items-start mb-2">
                             <div>
@@ -522,7 +533,7 @@ style="background-image: url('template symptocare.png');">
                 </div>
                 <!-- Doctor Card 4 -->
                 <div class="reveal bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-slate-100 hidden lg:block" style="transition-delay: 300ms;">
-                    <img src="child.jpeg" alt="Dr. James" class="w-full h-48 object-cover object-top">
+                    <img src="child.jpeg" alt="Dr. James" class="w-full h-48 object-cover object-top" onerror="this.src='https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'">
                     <div class="p-5">
                         <div class="flex justify-between items-start mb-2">
                             <div>
@@ -862,7 +873,7 @@ style="background-image: url('template symptocare.png');">
     </button>
 
     <!-- Chatbot Window -->
-    <div id="chat-window" class="fixed bottom-24 right-6 w-[350px] sm:w-[400px] h-[550px] max-h-[80vh] glass-dark rounded-2xl shadow-2xl z-50 flex flex-col hidden transform origin-bottom-right transition-all duration-300">
+    <div id="chat-window" class="fixed bottom-24 right-6 w-[350px] sm:w-[450px] h-[600px] max-h-[85vh] glass-dark rounded-2xl shadow-2xl z-50 flex flex-col hidden transform origin-bottom-right transition-all duration-300">
         <!-- Chat Header -->
         <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center bg-slate-900/50 rounded-t-2xl">
             <div class="flex items-center gap-3">
@@ -874,7 +885,7 @@ style="background-image: url('template symptocare.png');">
                 </div>
                 <div>
                     <h3 class="font-bold text-white text-sm">SymptoCare AI</h3>
-                    <p class="text-xs text-green-400">Online</p>
+                    <p class="text-xs text-green-400">Online &bull; Healthcare Assistant</p>
                 </div>
             </div>
             <button id="close-chat" class="text-slate-400 hover:text-white transition-colors">
@@ -883,14 +894,15 @@ style="background-image: url('template symptocare.png');">
         </div>
 
         <!-- Chat Body -->
-        <div id="chat-body" class="flex-1 overflow-y-auto p-5 space-y-4 text-sm bg-slate-900/80">
+        <div id="chat-body" class="flex-1 overflow-y-auto p-5 space-y-4 text-sm bg-slate-900/80 scroll-smooth">
             <!-- Initial Bot Message -->
             <div class="flex items-start gap-3">
-                <div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs">
+                <div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs mt-1">
                     <i class="fa-solid fa-robot"></i>
                 </div>
-                <div class="bg-slate-800 text-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-md border border-slate-700">
-                    Hello! I'm your SymptoCare AI Assistant. Please describe your symptoms (e.g., "I have a headache and mild fever"), and I'll analyze them for you.
+                <div class="bg-slate-800 text-slate-200 p-4 rounded-2xl rounded-tl-none w-[90%] shadow-md border border-slate-700 leading-relaxed">
+                    Hello! I'm your Intelligent Healthcare Assistant. 🩺 <br><br>
+                    Please describe your symptoms in detail (e.g., "I have a severe headache, mild fever, and a cough"), and our ML model will analyze them to provide probabilities, home remedies, and advice.
                 </div>
             </div>
         </div>
@@ -920,6 +932,54 @@ style="background-image: url('template symptocare.png');">
 
     <!-- JavaScript functionality -->
     <script>
+        // Simulated ML Medical Dataset mapping symptoms to conditions
+        const medicalDatabase = [
+            {
+                disease: "Flu (Influenza)",
+                symptoms: ["fever", "chills", "muscle", "ache", "cough", "congestion", "runny", "nose", "headache", "fatigue", "tired"],
+                explanation: "A common viral infection that attacks the respiratory system.",
+                ayurvedic: ["Tulsi (Holy Basil) tea for immunity", "Ginger and honey juice for throat", "Steam inhalation with eucalyptus oil"],
+                lifestyle: ["Get 8-10 hours of rest", "Stay highly hydrated", "Isolate to prevent spreading to others"]
+            },
+            {
+                disease: "Common Cold",
+                symptoms: ["cough", "sore", "throat", "runny", "nose", "sneezing", "mild", "fatigue", "phlegm"],
+                explanation: "A harmless viral infection of your nose and throat.",
+                ayurvedic: ["Warm turmeric milk (Haldi Doodh)", "Gargle with warm salt water", "Chew on ginger slices"],
+                lifestyle: ["Drink warm fluids", "Use a room humidifier", "Avoid cold beverages"]
+            },
+            {
+                disease: "Migraine / Tension Headache",
+                symptoms: ["headache", "severe", "throbbing", "pain", "nausea", "light", "sensitivity", "sound", "stress"],
+                explanation: "A neurological condition causing intense, debilitating headaches.",
+                ayurvedic: ["Brahmi or Ashwagandha for stress relief", "Massage temples with peppermint oil", "Drink chamomile tea"],
+                lifestyle: ["Sleep properly (7-8 hrs)", "Avoid harsh screen exposure", "Stay perfectly hydrated", "Practice deep breathing"]
+            },
+            {
+                disease: "Viral Gastroenteritis (Stomach Flu)",
+                symptoms: ["stomach", "pain", "nausea", "vomiting", "diarrhea", "cramps", "fever", "bloating"],
+                explanation: "An intestinal infection marked by watery diarrhea and abdominal cramps.",
+                ayurvedic: ["Chew on fennel seeds (Saunf)", "Drink cumin (Jeera) water", "Consume light Khichdi"],
+                lifestyle: ["Drink ORS or clear fluids to prevent dehydration", "Eat bland foods like toast or bananas", "Rest your stomach"]
+            },
+            {
+                disease: "Seasonal Allergies",
+                symptoms: ["sneezing", "itchy", "eyes", "watery", "nose", "congestion", "throat", "allergy", "dust"],
+                explanation: "An allergic response causing itchy, watery eyes, sneezing, and other similar symptoms.",
+                ayurvedic: ["Consume Amla (Vitamin C) daily", "Nasya (oil drops in nasal passage)"],
+                lifestyle: ["Avoid known triggers (dust, pollen)", "Keep windows closed during high pollen seasons", "Take warm showers to clear sinuses"]
+            },
+            {
+                disease: "Dengue Fever",
+                symptoms: ["high", "fever", "severe", "headache", "joint", "pain", "bone", "rash", "vomiting", "eye", "pain"],
+                explanation: "A mosquito-borne viral disease causing severe flu-like illness.",
+                ayurvedic: ["Papaya leaf juice to boost platelets", "Giloy juice for immunity", "Coconut water for extreme hydration"],
+                lifestyle: ["Complete bed rest", "Intense fluid intake", "Monitor platelet count strictly"]
+            }
+        ];
+
+        let chartIdCounter = 0; // To keep chart canvas IDs unique
+
         document.addEventListener('DOMContentLoaded', () => {
             // Loader fade out
             setTimeout(() => {
@@ -1030,7 +1090,7 @@ style="background-image: url('template symptocare.png');">
                 // Simulate AI response delay
                 setTimeout(() => {
                     typingIndicator.classList.add('hidden');
-                    generateBotResponse(text);
+                    processAIResponse(text);
                 }, 1500 + Math.random() * 1000); // 1.5s - 2.5s delay
             };
 
@@ -1039,22 +1099,22 @@ style="background-image: url('template symptocare.png');">
                 if (e.key === 'Enter') sendMessage();
             });
 
-            function addMessage(text, sender) {
+            function addMessage(htmlContent, sender) {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex items-start gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''}`;
                 
                 const iconHtml = sender === 'user' 
-                    ? `<div class="w-8 h-8 bg-slate-700 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-user"></i></div>`
-                    : `<div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-robot"></i></div>`;
+                    ? `<div class="w-8 h-8 bg-slate-700 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs mt-1"><i class="fa-solid fa-user"></i></div>`
+                    : `<div class="w-8 h-8 bg-primary rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs mt-1"><i class="fa-solid fa-robot"></i></div>`;
                 
                 const bubbleClass = sender === 'user'
                     ? `bg-primary text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-md`
-                    : `bg-slate-800 text-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-md border border-slate-700`;
+                    : `bg-slate-800 text-slate-200 p-4 rounded-2xl rounded-tl-none w-[90%] shadow-md border border-slate-700 text-sm leading-relaxed overflow-hidden`;
 
                 msgDiv.innerHTML = `
                     ${iconHtml}
                     <div class="${bubbleClass}">
-                        ${text}
+                        ${htmlContent}
                     </div>
                 `;
                 
@@ -1062,28 +1122,165 @@ style="background-image: url('template symptocare.png');">
                 scrollToBottom();
             }
 
-            function generateBotResponse(userInput) {
-                const lowerInput = userInput.toLowerCase();
-                let response = "";
-
-                // Basic logic matching
-                if (lowerInput.includes('headache') && lowerInput.includes('fever')) {
-                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Viral Infection (60%)<br>- Migraine/Stress (30%)<br>- Flu (10%)<br><br>💡 <b>Home Remedy:</b> Rest in a dark, quiet room, stay hydrated, and try a cold compress on your forehead.<br><br>👨‍⚕️ <b>Action:</b> If fever exceeds 102°F or lasts more than 3 days, <a href='#doctors' class='text-primary underline'>consult a doctor</a> immediately.";
-                } 
-                else if (lowerInput.includes('cough') || lowerInput.includes('throat')) {
-                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Common Cold (70%)<br>- Throat Infection (25%)<br>- Allergies (5%)<br><br>💡 <b>Home Remedy:</b> Gargle with warm salt water, drink honey-lemon tea, and use a humidifier.<br><br>👨‍⚕️ <b>Action:</b> If you experience shortness of breath, please <a href='#doctors' class='text-primary underline'>book a consultation</a>.";
-                }
-                else if (lowerInput.includes('stomach') || lowerInput.includes('pain')) {
-                    response = "Based on your symptoms: <br><br>🩺 <b>Probability:</b><br>- Indigestion / Gastritis (65%)<br>- Food Poisoning (25%)<br>- Others (10%)<br><br>💡 <b>Home Remedy:</b> Drink plenty of clear fluids, eat bland foods like toast or crackers, and try ginger tea.<br><br>👨‍⚕️ <b>Action:</b> Severe, sharp pain requires immediate attention. <a href='#doctors' class='text-primary underline'>View our specialists</a>.";
-                }
-                else if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-                    response = "Hello! I am ready to help. Please tell me what symptoms you are experiencing today.";
-                }
-                else {
-                    response = "I have noted your symptoms. <br><br>🩺 <b>Initial Analysis:</b> Needs more specific details for an accurate probability.<br><br>💡 <b>General Advice:</b> Keep monitoring your health. Make sure you are well-rested and hydrated.<br><br>👨‍⚕️ <b>Recommendation:</b> To be safe, it's best to discuss these specific symptoms with a professional. <button class='bg-primary/20 text-primary px-2 py-1 rounded mt-2 text-xs font-bold border border-primary/30'>Book Consultation</button>";
+            function processAIResponse(userInput) {
+                const words = userInput.toLowerCase().match(/\b(\w+)\b/g) || [];
+                
+                // Greeting check
+                if(words.includes('hi') || words.includes('hello') || words.includes('hey')) {
+                    if(words.length < 4) {
+                        addMessage("Hello there! 👋 How are you feeling today? Please list your symptoms so I can assist you.", 'bot');
+                        return;
+                    }
                 }
 
-                addMessage(response, 'bot');
+                let matches = [];
+
+                // Score diseases based on keyword matches
+                medicalDatabase.forEach(condition => {
+                    let score = 0;
+                    let matchedKeywords = [];
+                    condition.symptoms.forEach(symptom => {
+                        if (words.includes(symptom)) {
+                            score += 1;
+                            matchedKeywords.push(symptom);
+                        }
+                    });
+                    if (score > 0) {
+                        matches.push({ ...condition, score, matchedKeywords });
+                    }
+                });
+
+                if (matches.length === 0) {
+                    addMessage("I couldn't match those specific symptoms confidently. 🤒 <br><br><b>Please try to provide more details</b> (e.g., 'I have a headache, mild fever, and nausea'). <br><br>⚠️ If you are feeling severely unwell, please <a href='#doctors' class='text-primary underline'>consult a doctor immediately</a>.", 'bot');
+                    return;
+                }
+
+                // Sort by score
+                matches.sort((a, b) => b.score - a.score);
+                const totalScore = matches.reduce((sum, item) => sum + item.score, 0);
+                
+                // Get top 3
+                const topMatches = matches.slice(0, 3);
+                
+                // Calculate Probabilities
+                const labels = [];
+                const dataPoints = [];
+                let othersProb = 100;
+
+                topMatches.forEach(match => {
+                    // Simple normalization for probabilities
+                    let prob = Math.round((match.score / totalScore) * 80); // Capped at 80% to leave room for uncertainty
+                    if(prob < 5) prob = 5;
+                    match.probability = prob;
+                    othersProb -= prob;
+                    
+                    labels.push(match.disease);
+                    dataPoints.push(prob);
+                });
+
+                if(othersProb > 0) {
+                    labels.push("Other Conditions");
+                    dataPoints.push(othersProb);
+                }
+
+                const primaryCondition = topMatches[0];
+                const chartId = `chart-${chartIdCounter++}`;
+
+                // Build HTML Response
+                let responseHTML = `
+                    <div class="space-y-4">
+                        <!-- 1. Symptom Analysis -->
+                        <div>
+                            <h4 class="font-bold text-white flex items-center gap-2 border-b border-slate-700 pb-1 mb-2"><i class="fa-solid fa-magnifying-glass text-primary"></i> Symptom Analysis</h4>
+                            <p class="text-slate-300">I noticed symptoms like <b>${primaryCondition.matchedKeywords.join(", ")}</b>. These commonly indicate an inflammatory or viral response in your system.</p>
+                        </div>
+
+                        <!-- 2. Possible Conditions -->
+                        <div>
+                            <h4 class="font-bold text-white flex items-center gap-2 border-b border-slate-700 pb-1 mb-2"><i class="fa-solid fa-list-ul text-primary"></i> Possible Conditions</h4>
+                            <ul class="space-y-2">
+                                ${topMatches.map(m => `
+                                    <li class="bg-slate-900/50 p-2 rounded border border-slate-700/50">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-semibold text-white">${m.disease}</span>
+                                            <span class="text-xs px-2 py-1 bg-primary/20 text-primary rounded font-bold">${m.probability}%</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400">${m.explanation}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- 3. Visualization -->
+                        <div>
+                            <h4 class="font-bold text-white flex items-center gap-2 border-b border-slate-700 pb-1 mb-2"><i class="fa-solid fa-chart-pie text-primary"></i> Probability Distribution</h4>
+                            <div class="chart-container">
+                                <canvas id="${chartId}"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- 4. Ayurvedic Remedies -->
+                        <div>
+                            <h4 class="font-bold text-green-400 flex items-center gap-2 border-b border-slate-700 pb-1 mb-2"><i class="fa-solid fa-leaf"></i> Ayurvedic Remedies</h4>
+                            <ul class="list-disc pl-5 text-slate-300 space-y-1 text-xs">
+                                ${primaryCondition.ayurvedic.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- 5. Lifestyle Advice -->
+                        <div>
+                            <h4 class="font-bold text-blue-400 flex items-center gap-2 border-b border-slate-700 pb-1 mb-2"><i class="fa-solid fa-person-praying"></i> Lifestyle Advice</h4>
+                            <ul class="list-disc pl-5 text-slate-300 space-y-1 text-xs">
+                                ${primaryCondition.lifestyle.map(l => `<li>${l}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- 6. Warning -->
+                        <div class="bg-red-500/10 border border-red-500/30 p-3 rounded-lg text-xs text-red-200 mt-4">
+                            <p class="flex items-start gap-2">
+                                <i class="fa-solid fa-triangle-exclamation mt-0.5 text-red-400"></i>
+                                <span><b>Disclaimer:</b> This AI prediction is not a substitute for professional medical diagnosis. If symptoms persist or worsen, please consult a doctor immediately.</span>
+                            </p>
+                            <a href="#doctors" class="inline-block mt-2 bg-red-500/20 hover:bg-red-500/30 text-white px-3 py-1.5 rounded font-bold transition-colors">Book Consultation</a>
+                        </div>
+                    </div>
+                `;
+
+                // Add to DOM
+                addMessage(responseHTML, 'bot');
+
+                // Render Chart.js on the newly added canvas
+                setTimeout(() => {
+                    const ctx = document.getElementById(chartId).getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: dataPoints,
+                                backgroundColor: [
+                                    '#0ea5e9', // primary
+                                    '#8b5cf6', // purple
+                                    '#f59e0b', // amber
+                                    '#475569'  // slate
+                                ],
+                                borderColor: '#1e293b',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    labels: { color: '#cbd5e1', font: { size: 10, family: 'Poppins' }, boxWidth: 12 }
+                                }
+                            },
+                            cutout: '65%'
+                        }
+                    });
+                }, 100); // small delay to ensure DOM is updated
             }
 
             function scrollToBottom() {
